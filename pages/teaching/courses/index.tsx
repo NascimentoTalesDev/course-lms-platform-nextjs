@@ -9,7 +9,6 @@ const CoursesPage = () => {
             <Link href={"/teaching/courses/new-course"}>
                 <Button variant="default">Novo curso</Button>
             </Link>
-
         </LayoutTeaching>
     );
 }

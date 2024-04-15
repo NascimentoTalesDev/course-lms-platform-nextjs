@@ -10,8 +10,6 @@ const NavbarTeaching = () => {
     const pathname = usePathname()
     const { showMenuMobile, toggleMenuMobile } = useContext(NavbarTeachingContext)
 
-    console.log("showMenuMobile", showMenuMobile);
-
     return (
         <div className={`absolute z-10 md:relative h-screen w-screen md:w-[250px] flex flex-col transition-all duration-500 ${showMenuMobile ? "-left-0 " : "-left-[100%] md:-left-0 "}`}>
             {showMenuMobile && (
@@ -26,31 +24,31 @@ const NavbarTeaching = () => {
                     <menu >
                         <ul className="flex flex-col">
                             <li>
-                                <Link className={`flex text-slate-500 text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 "}`} href={"/teaching/"}>
+                                <Link className={`flex text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 text-slate-500 "}`} href={"/teaching/"}>
                                     <Layout size={24} />
                                     Dashboard
                                 </Link>
                             </li>
                             <li>
-                                <Link className={`flex text-slate-500 text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching/courses" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 "}`} href={"/teaching/courses"}>
+                                <Link className={`flex text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname?.includes("/teaching/courses") ? " text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 text-slate-500 "}`} href={"/teaching/courses"}>
                                     <List size={24} />
                                     Cursos
                                 </Link>
                             </li>
                             <li>
-                                <Link className={`flex text-slate-500 text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching/settings" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 "}`} href={"/teaching/"}>
+                                <Link className={`flex text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname?.includes("/teaching/settings") ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 text-slate-500 "}`} href={"/teaching/"}>
                                     <BarChart size={24} />
                                     Análise
                                 </Link>
                             </li>
                             <li>
-                                <Link className={`flex text-slate-500 text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching/settings" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 "}`} href={"/teaching/"}>
+                                <Link className={`flex text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname?.includes("/teaching/browser") ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 text-slate-500 "}`} href={"/teaching/"}>
                                     <Compass size={24} />
                                     Browser
                                 </Link>
                             </li>
                             <li>
-                                <Link className={`flex text-slate-500 text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname === "/teaching/settings" ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 "}`} href={"/teaching/"}>
+                                <Link className={`flex text-sm p-3 transition duration-500 font-bold items-center w-full gap-2 border-r-[4px] border-sky-700  ${pathname?.includes("/teaching/settings") ? "text-sky-900 border-opacity-100 bg-sky-200/20 hover:bg-sky-200/20 " : "border-opacity-0 hover:bg-slate-500/20 text-slate-500 "}`} href={"/teaching/"}>
                                     <Settings size={24} />
                                     Configurações
                                 </Link>

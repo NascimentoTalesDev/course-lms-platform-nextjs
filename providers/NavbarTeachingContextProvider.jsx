@@ -3,11 +3,8 @@ export const NavbarTeachingContext = createContext({})
 
 const NavbarTeachingContextProvider = ({ children }) => {
     const [showMenuMobile, setShowMenuMobile] = useState(false)
-    console.log("FORA");
-
-    const toggleMenuMobile = () => {
-        console.log("CLICOU");
-        
+    
+    const toggleMenuMobile = () => {        
         setShowMenuMobile(!showMenuMobile);
     }
 
