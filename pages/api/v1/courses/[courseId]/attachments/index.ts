@@ -5,14 +5,15 @@ interface RequestBody {
     method: String;
 }
 
-export default async function CourseId(req: NextRequest, res: NextResponse) {
+export default async function Attachments(req: NextRequest, res: NextResponse) {
     const { method } : RequestBody = req;
     
     const { courseId } = (req as any).query;
+    const { url } = (req as any).body;
     
-    if(method === "GET"){
+    if(method === "POST"){
         
-        const course = await db.course.findUnique({
+        const courseOwner = await db.course.findUnique({
             where:{
                 id: courseId
             },
@@ -25,25 +26,15 @@ export default async function CourseId(req: NextRequest, res: NextResponse) {
             }
         })
         
-        return res.json(course)    
-    }
-
-    if(method === "PATCH"){        
-        const values = (req as any).body
-        const { courseId } = (req as any).query
-        
-        const course = await db.course.update({
-            where:{
-                id: courseId
-            },
+        const attachment = await db.attachment.create({
             data:{
-                ...values,
+                url,
+                name: url.split("/").pop(),
+                courseId 
             }
         })
         
-        
-        return res.json(course)    
+        return res.json(attachment)    
     }
-    
 
 }

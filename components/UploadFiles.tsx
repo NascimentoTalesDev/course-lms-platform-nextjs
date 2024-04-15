@@ -14,7 +14,6 @@ export default function UploadFiles({ onChange, endpoint}) {
         endpoint={endpoint}
         onClientUploadComplete={(res) => {
           onChange(res?.[0]?.url)
-          toast.success("Upload Completo");
         }}
         onUploadError={(error: Error) => {
           toast.error("Error ao fazer upload");

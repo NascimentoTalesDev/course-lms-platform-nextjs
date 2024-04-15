@@ -8,11 +8,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UploadFiles from "../../UploadFiles";
 import Image from "next/image";
+import { Course } from "@prisma/client";
 
 interface ImageFormProps {
-    initialData: {
-        imageUrl: string
-    },
+    initialData: Course
     courseId: string
 }
 
