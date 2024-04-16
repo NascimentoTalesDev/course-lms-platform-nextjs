@@ -10,7 +10,7 @@ import UploadFiles from "../../UploadFiles";
 import { Attachment, Course } from "@prisma/client";
 
 interface AttachmentFormProps {
-    initialData: Course & { attachments: Attachment}
+    initialData: Course & { attachments: Attachment }
     courseId: string
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { db } from  "../../../../lib/db"
+import { db } from "../../../../lib/db"
 import LayoutTeaching from "../../../../components/teaching/Layout";
 import { useRouter } from 'next/router'
 import useCourse from '../../../../hooks/useCourse'
@@ -11,35 +11,35 @@ import ImageForm from "../../../../components/teaching/courses/ImageForm";
 import CategoryForm from "../../../../components/teaching/courses/CategoryForm";
 import PriceForm from "../../../../components/teaching/courses/PriceForm";
 import AttachmentForm from "../../../../components/teaching/courses/AttachmentForm";
+import ChapterForm from "../../../../components/teaching/courses/ChapterForm";
 
 const CourseIdPage = ({ categories }) => {
     const { courseId } = useRouter().query
     const { data: course = {} } = useCourse(courseId as String)
-    
-    console.log("course", course);
-    
+
     const requiredFields = [
         course?.title,
         course?.description,
         course?.imageUrl,
         course?.price,
         course?.categoryId,
+        course?.chapters?.some(chapter => chapter?.isPublish)
     ]
 
-    const totalFields = requiredFields?.length 
+    const totalFields = requiredFields?.length
     const completedFields = requiredFields?.filter(Boolean).length
-    
+
     const completionText = (`${completedFields} / ${totalFields}`)
 
-    
+
     return (
         <LayoutTeaching>
             <div className="flex items-center justify-between" >
-        <div className="flex flex-col gap-y-2">
-            <h1 className="text-2xl font-medium">Configurações do curso &quot;{course?.title}&ldquo;</h1>
-            <span className="text-sm text-slate-700">Compete todos os campos {completionText}</span>
-        </div>
-        </div>
+                <div className="flex flex-col gap-y-2">
+                    <h1 className="text-2xl font-medium">Configurações do curso &quot;{course?.title}&ldquo;</h1>
+                    <span className="text-sm text-slate-700">Complete todos os campos {completionText}</span>
+                </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
                 <div>
                     <div className="flex items-center gap-x-2">
@@ -49,13 +49,13 @@ const CourseIdPage = ({ categories }) => {
                     <TitleForm initialData={course} courseId={course?.id} />
                     <DescriptionForm initialData={course} courseId={course?.id} />
                     <ImageForm initialData={course} courseId={course?.id} />
-                    <CategoryForm 
-                        initialData={course} 
+                    <CategoryForm
+                        initialData={course}
                         courseId={course?.id}
                         options={categories.length > 0 && categories.map((category) => ({
                             label: category.name,
                             value: category.id,
-                        }))} 
+                        }))}
                     />
                 </div>
                 <div className="space-y-6">
@@ -64,9 +64,7 @@ const CourseIdPage = ({ categories }) => {
                             <IconBadge icon={ListChecks} />
                             <h2 className="text-x2">Modulos do curso</h2>
                         </div>
-                        <div>
-                            TODO: Modulos
-                        </div>
+                        <ChapterForm initialData={course} courseId={course?.id} />
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">
@@ -82,12 +80,12 @@ const CourseIdPage = ({ categories }) => {
                         </div>
                         <AttachmentForm initialData={course} courseId={course?.id} />
                     </div>
-                </div>  
+                </div>
             </div>
         </LayoutTeaching>
     );
 }
- 
+
 export default CourseIdPage;
 
 export async function getServerSideProps(req) {

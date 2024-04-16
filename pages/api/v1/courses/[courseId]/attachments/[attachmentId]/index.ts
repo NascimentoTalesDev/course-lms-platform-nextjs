@@ -27,8 +27,4 @@ export default async function AttachmentId(req: NextRequest, res: NextResponse) 
         return res.json(attachment)
     }
     
-    
-    
-    
-
 }

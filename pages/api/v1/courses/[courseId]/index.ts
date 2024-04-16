@@ -17,6 +17,11 @@ export default async function CourseId(req: NextRequest, res: NextResponse) {
                 id: courseId
             },
             include:{
+                chapters:{
+                    orderBy:{
+                        position: "asc"
+                    }
+                },
                 attachments: {
                     orderBy: {
                         createdAt: "desc"
@@ -40,7 +45,6 @@ export default async function CourseId(req: NextRequest, res: NextResponse) {
                 ...values,
             }
         })
-        
         
         return res.json(course)    
     }
