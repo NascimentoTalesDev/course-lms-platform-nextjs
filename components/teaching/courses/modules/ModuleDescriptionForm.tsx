@@ -1,46 +1,47 @@
-"use client"
 import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../ui/button"
-import { Input } from "../../ui/input"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../ui/form"
+import { Button } from "../../../ui/button"
+import Editor from "../../../ui/Editor"
+import Preview from "../../../Preview"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import { base, version } from "../../../lib/config-api";
+import { base, version } from "../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { cn } from "../../../../lib/utils";
+import { Course } from "@prisma/client";
 
-interface TitleFormProps {
-    initialData: {
-        title: string
-    },
+interface ModuleDescriptionFormProps {
+    initialData: Course
     courseId: string
+    moduleId: string
 }
 
 const formSchema = z.object({
-    title: z.string().min(1, {
-        message: "Hmm, algo está faltando! Por favor, insira um título."
-    })
+    description: z.string().min(1)
 })
 
-const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+const ModuleDescriptionForm = ({ initialData, courseId, moduleId }: ModuleDescriptionFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            description: initialData?.description || ""
+        },
     })
 
     const { isSubmitting, isValid } = form.formState
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}`, values)
-            toast.success("Título atualizado")
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}`, values)
+            toast.success("Descrição atualizada")
             toggleEdit()
             router.refresh()
         } catch (error) {
@@ -53,21 +54,24 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Título do curso
+                Descrição do Módulo
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing ? (
                         <>Cancelar</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Editar título
+                            Editar descrição
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="test-sm mt-2">
-                    {initialData?.title}
+                <p className={cn("test-sm mt-2", !initialData?.description && "text-slate-500 italic")}>
+                    {!initialData?.description && "Não há descrição do modulo"}
+                    {initialData.description && (
+                        <Preview value={initialData.description} />
+                    )}
                 </p>
             )}
 
@@ -76,14 +80,13 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
                         <FormField
                             control={form.control}
-                            name="title"
-                            render={({field}) => (
+                            name="description"
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input
-                                            disabled={isSubmitting}
-                                            placeholder="Bolos caseiros da Maria"
+                                        <Editor
                                             {...field}
+
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -102,4 +105,4 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     );
 }
 
-export default TitleForm;
+export default ModuleDescriptionForm;

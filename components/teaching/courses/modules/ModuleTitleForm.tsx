@@ -3,29 +3,28 @@ import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../ui/button"
-import { Input } from "../../ui/input"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../ui/form"
+import { Button } from "../../../ui/button"
+import { Input } from "../../../ui/input"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import { base, version } from "../../../lib/config-api";
+import { base, version } from "../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-interface TitleFormProps {
+interface ModuleTitleFormProps {
     initialData: {
         title: string
     },
     courseId: string
+    moduleId: string
 }
 
 const formSchema = z.object({
-    title: z.string().min(1, {
-        message: "Hmm, algo está faltando! Por favor, insira um título."
-    })
+    title: z.string().min(1)
 })
 
-const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+const ModuleTitleForm = ({ initialData, courseId, moduleId }: ModuleTitleFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -39,7 +38,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}`, values)
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}`, values)
             toast.success("Título atualizado")
             toggleEdit()
             router.refresh()
@@ -53,7 +52,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Título do curso
+                Título do módulo
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing ? (
                         <>Cancelar</>
@@ -102,4 +101,4 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     );
 }
 
-export default TitleForm;
+export default ModuleTitleForm;

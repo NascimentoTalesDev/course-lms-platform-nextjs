@@ -73,9 +73,7 @@ const NewCourse = () => {
                                 <Link href={"/teaching/courses"}>
                                     <Button type={"button"} variant={"ghost"}>Cancelar</Button>
                                 </Link>
-                                
                                 <Button type={"submit"} variant={"default"} disabled={!isValid || isSubmitting} >Continuar</Button>
-                                
                             </div>
                         </form>
                     </Form>

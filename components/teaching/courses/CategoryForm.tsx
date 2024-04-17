@@ -52,7 +52,7 @@ const CategoryForm = ({ initialData, courseId, options } : CategoryFormProps) =>
     
     let selected_option;
     if (options) {
-        selected_option = options.find((option)=> option.value === initialData.categoryId)    
+        selected_option = options.find((option)=> option.value === initialData?.categoryId)    
     }
     
     return (
@@ -71,7 +71,7 @@ const CategoryForm = ({ initialData, courseId, options } : CategoryFormProps) =>
                 </Button>
             </div>
             {!isEditing && (
-                <p className={cn("test-sm mt-2", !initialData.categoryId && "text-slate-500 italic")}>
+                <p className={cn("test-sm mt-2", !initialData?.categoryId && "text-slate-500 italic")}>
                     {selected_option?.label || "Sem categoria" }
                 </p>
             )}

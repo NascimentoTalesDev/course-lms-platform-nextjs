@@ -15,7 +15,8 @@ export default async function Attachments(req: NextRequest, res: NextResponse) {
         
         const courseOwner = await db.course.findUnique({
             where:{
-                id: courseId
+                id: courseId,
+                
             },
             include:{
                 attachments: {
@@ -30,7 +31,7 @@ export default async function Attachments(req: NextRequest, res: NextResponse) {
             data:{
                 url,
                 name: url.split("/").pop(),
-                courseId 
+                courseId,
             }
         })
         

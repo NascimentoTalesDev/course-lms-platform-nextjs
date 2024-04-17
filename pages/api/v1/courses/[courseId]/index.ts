@@ -17,7 +17,7 @@ export default async function CourseId(req: NextRequest, res: NextResponse) {
                 id: courseId
             },
             include:{
-                chapters:{
+                modules:{
                     orderBy:{
                         position: "asc"
                     }

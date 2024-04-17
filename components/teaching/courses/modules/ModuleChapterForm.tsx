@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../ui/button"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../ui/form"
+import { Button } from "../../../ui/button"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Loader2, PlusCircle } from "lucide-react";
-import { base, version } from "../../../lib/config-api";
+import { base, version } from "../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { cn } from "../../../lib/utils";
-import { Chapter, Course } from "@prisma/client";
-import { Input } from "../../ui/input";
-import ChapterList from "./ChapterList";
+import { cn } from "../../../../lib/utils";
+import { Course, CourseModule } from "@prisma/client";
+import { Input } from "../../../ui/input";
+import ModuleChapterList from "../../../teaching/courses/modules/ModuleChapterList";
 
-interface ChapterFormProps {
-    initialData: Course & { chapters: Chapter[] }
+interface ModuleChapterFormProps {
+    initialData: Course & { modules: CourseModule[] }
     courseId: string
+    moduleId: string
 }
 
 const formSchema = z.object({
     title: z.string().min(1)
 })
 
-const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
+const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFormProps) => {
     const router = useRouter()
 
     const [isCreating, setIsCreating] = useState(false)
@@ -44,8 +45,8 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.post(`${base}/${version}/courses/${courseId}/chapters`, values)
-            toast.success("Módulo criado")
+            await axios.post(`${base}/${version}/courses/${courseId}/modules/${moduleId}`, values)
+            toast.success("Aula criada")
             toggleCreating()
             router.refresh()
         } catch (error) {
@@ -56,8 +57,8 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
     const onReorder = async ( updateData: { id: string, position: number } ) => {
         try {
             setIsUpdating(true)
-            await axios.put(`${base}/${version}/courses/${courseId}/chapters/reorder`, { list: updateData })
-            toast.success("Módulos reordenados")
+            await axios.put(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/reorder`, { list: updateData })
+            toast.success("Aulas reordenados")
         } catch (error) {
             toast.error("Aconteceu um erro inesperado");
         }finally{
@@ -66,7 +67,7 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
     }
 
     const onEdit = async (id: string) => {
-        router.push(`/teaching/courses/${courseId}/chapters/${id}`)
+        router.push(`/teaching/courses/${courseId}/modules/${id}/chapters/reorder`)
     }
 
     return (
@@ -77,14 +78,14 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
                 </div>
             )}
             <div className="font-medium flex items-center justify-between">
-                Módulos do curso
+                Aulas do curso
                 <Button className="" onClick={toggleCreating} variant={"ghost"}>
                     {isCreating ? (
                         <>Cancelar</>
                     ) : (
                         <>
                             <PlusCircle className="h-4 w-4 mr-2" />
-                            Adicionar módulos
+                            Adicionar aula
                         </>
                     )}
                 </Button>
@@ -117,18 +118,18 @@ const ChapterForm = ({ initialData, courseId }: ChapterFormProps) => {
                 </Form>
             )}
             {!isCreating && (
-                <div className={cn("text-sm", !initialData?.chapters?.length && "text-slate-500 italic")}>
-                    { !initialData?.chapters?.length && "Nenhum módulo criado" } 
-                    <ChapterList onEdit={onEdit} onReorder={onReorder} items={initialData?.chapters || []}  />
+                <div className={cn("text-sm", !initialData?.modules?.length && "text-slate-500 italic")}>
+                    { !initialData?.modules?.length && "Nenhuma aula criada ainda" } 
+                    <ModuleChapterList onEdit={onEdit} onReorder={onReorder} items={initialData?.modules || []}  />
                 </div>
             )}
             {!isCreating && (
                 <p className="text-sm text-muted-foreground mt-4">
-                    Araste e solte para reordenar os módulos 
+                    Araste e solte para reordenar as aulas 
                 </p>
             )}
         </div>
     );
 }
 
-export default ChapterForm;
+export default ModuleChapterForm;

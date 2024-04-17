@@ -1,36 +1,35 @@
-import React from "react";
+import React from "react"
 import { db } from "../../../../lib/db"
-import LayoutTeaching from "../../../../components/teaching/Layout";
-import { useRouter } from 'next/router'
-import useCourse from '../../../../hooks/useCourse'
-import { IconBadge } from "../../../../components/icons/BadgeIcon";
-import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react";
-import TitleForm from "../../../../components/teaching/courses/TitleForm";
-import DescriptionForm from "../../../../components/teaching/courses/DescriptionForm";
-import ImageForm from "../../../../components/teaching/courses/ImageForm";
-import CategoryForm from "../../../../components/teaching/courses/CategoryForm";
-import PriceForm from "../../../../components/teaching/courses/PriceForm";
-import AttachmentForm from "../../../../components/teaching/courses/AttachmentForm";
-import ChapterForm from "../../../../components/teaching/courses/ChapterForm";
+import useCourse from "../../../../hooks/useCourse"
+import LayoutTeaching from "../../../../components/teaching/Layout"
+import { useRouter } from "next/router"
+import { IconBadge } from "../../../../components/icons/BadgeIcon"
+import { CircleDollarSign, File, LayoutDashboard, ListChecks } from "lucide-react"
+import TitleForm from "../../../../components/teaching/courses/TitleForm"
+import DescriptionForm from "../../../../components/teaching/courses/DescriptionForm"
+import ImageForm from "../../../../components/teaching/courses/ImageForm"
+import CategoryForm from "../../../../components/teaching/courses/CategoryForm"
+import ModuleForm from "../../../../components/teaching/courses/ModuleForm"
+import PriceForm from "../../../../components/teaching/courses/PriceForm"
+import AttachmentForm from "../../../../components/teaching/courses/AttachmentForm"
 
-const CourseIdPage = ({ categories }) => {
+const CourseId = ({ categories }) => {
     const { courseId } = useRouter().query
     const { data: course = {} } = useCourse(courseId as String)
-
+    
     const requiredFields = [
         course?.title,
         course?.description,
         course?.imageUrl,
         course?.price,
         course?.categoryId,
-        course?.chapters?.some(chapter => chapter?.isPublish)
+        course?.module
     ]
 
     const totalFields = requiredFields?.length
     const completedFields = requiredFields?.filter(Boolean).length
 
     const completionText = (`${completedFields} / ${totalFields}`)
-
 
     return (
         <LayoutTeaching>
@@ -62,9 +61,9 @@ const CourseIdPage = ({ categories }) => {
                     <div>
                         <div className="flex items-center gap-x-2">
                             <IconBadge icon={ListChecks} />
-                            <h2 className="text-x2">Modulos do curso</h2>
+                            <h2 className="text-x2">Personalizar modulos do curso</h2>
                         </div>
-                        <ChapterForm initialData={course} courseId={course?.id} />
+                        <ModuleForm initialData={course} courseId={course?.id} />
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">
@@ -73,20 +72,20 @@ const CourseIdPage = ({ categories }) => {
                         </div>
                         <PriceForm initialData={course} courseId={course?.id} />
                     </div>
-                    <div>
+                    {/* <div>
                         <div className="flex items-center gap-x-2">
                             <IconBadge icon={File} />
                             <h2 className="text-x2">Recursos e anéxos</h2>
                         </div>
                         <AttachmentForm initialData={course} courseId={course?.id} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </LayoutTeaching>
     );
 }
 
-export default CourseIdPage;
+export default CourseId;
 
 export async function getServerSideProps(req) {
     const categories = await db.category.findMany({
