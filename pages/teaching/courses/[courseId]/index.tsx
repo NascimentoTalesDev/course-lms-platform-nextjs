@@ -12,10 +12,12 @@ import CategoryForm from "../../../../components/teaching/courses/CategoryForm"
 import ModuleForm from "../../../../components/teaching/courses/ModuleForm"
 import PriceForm from "../../../../components/teaching/courses/PriceForm"
 import AttachmentForm from "../../../../components/teaching/courses/AttachmentForm"
+import Actions from "../../../../components/teaching/courses/Actions"
 
-const CourseId = ({ categories }) => {
+const CourseIdPage = ({ categories }) => {
     const { courseId } = useRouter().query
     const { data: course = {} } = useCourse(courseId as String)
+    console.log(course);
     
     const requiredFields = [
         course?.title,
@@ -23,13 +25,15 @@ const CourseId = ({ categories }) => {
         course?.imageUrl,
         course?.price,
         course?.categoryId,
-        course?.module
+        course?.modules?.some(module => module?.isPublished),
     ]
 
     const totalFields = requiredFields?.length
     const completedFields = requiredFields?.filter(Boolean).length
 
     const completionText = (`${completedFields} / ${totalFields}`)
+
+    const isComplete = requiredFields?.every(Boolean)
 
     return (
         <LayoutTeaching>
@@ -38,6 +42,8 @@ const CourseId = ({ categories }) => {
                     <h1 className="text-2xl font-medium">Configurações do curso &quot;{course?.title}&ldquo;</h1>
                     <span className="text-sm text-slate-700">Complete todos os campos {completionText}</span>
                 </div>
+                <Actions disabled={!isComplete} courseId={courseId as string} isPublished={course?.isPublished} />
+
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
                 <div>
@@ -85,7 +91,7 @@ const CourseId = ({ categories }) => {
     );
 }
 
-export default CourseId;
+export default CourseIdPage;
 
 export async function getServerSideProps(req) {
     const categories = await db.category.findMany({

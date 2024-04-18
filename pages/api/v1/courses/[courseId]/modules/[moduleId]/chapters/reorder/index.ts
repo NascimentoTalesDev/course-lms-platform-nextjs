@@ -8,8 +8,11 @@ interface RequestBody {
 export default async function Reorder(req: NextRequest, res: NextResponse) {
     const { method }: RequestBody = req;
 
-    const { courseId } = (req as any).query;
+    const { courseId, moduleId } = (req as any).query;
     const { list } = (req as any).body;
+
+    console.log("list", list);
+
 
     if (method === "PUT") {
 
@@ -18,17 +21,36 @@ export default async function Reorder(req: NextRequest, res: NextResponse) {
                 id: courseId
             },
         })
-        
-        for(let item of list) {
-            await db.chapter.update({
+
+        const course_module = await db.courseModule.findUnique({
+            where: {
+                id: moduleId
+            },
+            include: {
+                chapters: {
+                    orderBy: {
+                        position: "desc"
+                    }
+                }
+            }
+        })
+
+
+        for (let item of list) {
+
+            let chap = await db.chapter.update({
                 where: {
                     id: item.id,
+                    courseModuleId: moduleId
                 },
                 data: {
-                    position: item.position
+                    position: item.position,
                 }
             })
+            console.log("chap", chap);
         }
+
+
 
         return res.json("Success")
     }

@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../../ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../../ui/form"
+import { Button } from "../../../../ui/button"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "../../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import { base, version } from "../../../../lib/config-api";
+import { base, version } from "../../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { cn } from "../../../../lib/utils";
+import { cn } from "../../../../../lib/utils";
 import { Chapter } from "@prisma/client";
-import { Checkbox } from "../../../ui/Checkbox";
-import Preview from "../../../Preview";
+import { Checkbox } from "../../../../ui/Checkbox";
 
 interface ChapterAccessFormProps {
     initialData: Chapter
     courseId: string
+    moduleId: string
     chapterId: string
 }
 
@@ -24,7 +24,7 @@ const formSchema = z.object({
     isFree: z.boolean().default(false)
 })
 
-const ChapterAccessForm = ({ initialData, courseId, chapterId }: ChapterAccessFormProps) => {
+const ChapterAccessForm = ({ initialData, courseId, moduleId, chapterId }: ChapterAccessFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -40,8 +40,8 @@ const ChapterAccessForm = ({ initialData, courseId, chapterId }: ChapterAccessFo
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}/chapters/${chapterId}`, values)
-            toast.success("Acesso do módulo atualizado")
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/${chapterId}`, values)
+            toast.success("Acesso da aula atualizado")
             toggleEdit()
             router.refresh()
         } catch (error) {
@@ -54,7 +54,7 @@ const ChapterAccessForm = ({ initialData, courseId, chapterId }: ChapterAccessFo
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Acesso do módulo
+                Acesso da aula
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing ? (
                         <>Cancelar</>
@@ -68,10 +68,10 @@ const ChapterAccessForm = ({ initialData, courseId, chapterId }: ChapterAccessFo
             </div>
             {!isEditing && (
                 <div className={cn("test-sm mt-2", !initialData?.isFree && "text-slate-500 italic")}>
-                    {initialData.isFree ? (
-                        <>Este módulo é gratuito</>
+                    {initialData?.isFree ? (
+                        <>Esta aula é gratuita</>
                     ):(
-                        <>Este módulo não é gratuito</>
+                        <>Esta aula não é gratuita</>
                     )}
                 </div>
             )}

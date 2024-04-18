@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../../ui/button"
-import { Textarea } from "../../../ui/textarea"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form"
+import { Button } from "../../../../ui/button"
+import { Textarea } from "../../../../ui/textarea"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import { base, version } from "../../../../lib/config-api";
+import { base, version } from "../../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { cn } from "../../../../lib/utils";
+import { cn } from "../../../../../lib/utils";
 import { Chapter } from "@prisma/client";
-import Editor from "../../../ui/Editor";
-import Preview from "../../../Preview";
+import Editor from "../../../../ui/Editor";
+import Preview from "../../../../Preview";
 
 interface ChapterDescriptionFormProps {
     initialData: Chapter
     courseId: string
+    moduleId: string
     chapterId: string
 }
 
@@ -25,7 +26,7 @@ const formSchema = z.object({
     description: z.string().min(1)
 })
 
-const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDescriptionFormProps) => {
+const ChapterDescriptionForm = ({ initialData, courseId, moduleId, chapterId }: ChapterDescriptionFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -41,7 +42,7 @@ const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDes
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}/chapters/${chapterId}`, values)
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/${chapterId}`, values)
             toast.success("Descrição do módulo atualizada")
             toggleEdit()
             router.refresh()
@@ -55,7 +56,7 @@ const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDes
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Descrição do módulo
+                Descrição da aula
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing ? (
                         <>Cancelar</>
@@ -69,9 +70,9 @@ const ChapterDescriptionForm = ({ initialData, courseId, chapterId }: ChapterDes
             </div>
             {!isEditing && (
                 <div className={cn("test-sm mt-2", !initialData?.description && "text-slate-500 italic")}>
-                    {!initialData?.description && "Não há descrição do curso"}
-                    {initialData.description && (
-                        <Preview value={initialData.description} />
+                    {!initialData?.description && "Não há descrição da aula"}
+                    {initialData?.description && (
+                        <Preview value={initialData?.description} />
                     )}
                 </div>
             )}

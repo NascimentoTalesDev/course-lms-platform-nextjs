@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import * as z from "zod"
 import axios from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "../../../ui/button"
-import { Input } from "../../../ui/input"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../ui/form"
+import { Button } from "../../../../ui/button"
+import { Input } from "../../../../ui/input"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../../../../ui/form"
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
-import { base, version } from "../../../../lib/config-api";
+import { base, version } from "../../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -16,6 +16,7 @@ interface ChapterTitleFormProps {
         title: string
     },
     courseId: string
+    moduleId: string
     chapterId: string
 }
 
@@ -23,7 +24,7 @@ const formSchema = z.object({
     title: z.string().min(1)
 })
 
-const ChapterTitleForm = ({ initialData, courseId, chapterId }: ChapterTitleFormProps) => {
+const ChapterTitleForm = ({ initialData, courseId, moduleId, chapterId }: ChapterTitleFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -37,7 +38,7 @@ const ChapterTitleForm = ({ initialData, courseId, chapterId }: ChapterTitleForm
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}/chapters/${chapterId}`, values)
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/${chapterId}`, values)
             toast.success("Título atualizado")
             toggleEdit()
             router.refresh()
@@ -51,7 +52,7 @@ const ChapterTitleForm = ({ initialData, courseId, chapterId }: ChapterTitleForm
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Título do módulo
+                Título da aula
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing ? (
                         <>Cancelar</>

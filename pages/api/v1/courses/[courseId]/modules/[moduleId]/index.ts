@@ -27,6 +27,13 @@ export default async function ChapterId(req: NextRequest, res: NextResponse) {
             where:{
                 id: moduleId,
                 courseId
+            },
+            include: {
+                chapters: {
+                    orderBy: {
+                        position: "asc"
+                    }
+                }
             }
             
         })
@@ -56,4 +63,17 @@ export default async function ChapterId(req: NextRequest, res: NextResponse) {
         
         return res.json(course_module)    
     }
+
+    if(method === "DELETE"){
+        console.log("DELETE")
+
+        const deletedCourseModule = await db.courseModule.delete({
+            where: {
+                id: moduleId,
+                courseId
+            }
+        })
+
+        return res.json(deletedCourseModule)
+    } 
 }

@@ -10,12 +10,12 @@ import { base, version } from "../../../../lib/config-api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { cn } from "../../../../lib/utils";
-import { Course, CourseModule } from "@prisma/client";
+import { Chapter, Course, CourseModule } from "@prisma/client";
 import { Input } from "../../../ui/input";
 import ModuleChapterList from "../../../teaching/courses/modules/ModuleChapterList";
 
 interface ModuleChapterFormProps {
-    initialData: Course & { modules: CourseModule[] }
+    initialData: CourseModule & { chapters: Chapter[] }
     courseId: string
     moduleId: string
 }
@@ -26,7 +26,7 @@ const formSchema = z.object({
 
 const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFormProps) => {
     const router = useRouter()
-
+    
     const [isCreating, setIsCreating] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
     
@@ -45,7 +45,7 @@ const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFor
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.post(`${base}/${version}/courses/${courseId}/modules/${moduleId}`, values)
+            await axios.post(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters`, values)
             toast.success("Aula criada")
             toggleCreating()
             router.refresh()
@@ -58,7 +58,7 @@ const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFor
         try {
             setIsUpdating(true)
             await axios.put(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/reorder`, { list: updateData })
-            toast.success("Aulas reordenados")
+            toast.success("Aulas reordenadas")
         } catch (error) {
             toast.error("Aconteceu um erro inesperado");
         }finally{
@@ -67,7 +67,7 @@ const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFor
     }
 
     const onEdit = async (id: string) => {
-        router.push(`/teaching/courses/${courseId}/modules/${id}/chapters/reorder`)
+        router.push(`/teaching/courses/${courseId}/modules/${moduleId}/chapters/${id}`)
     }
 
     return (
@@ -118,9 +118,9 @@ const ModuleChapterForm = ({ initialData, courseId, moduleId }: ModuleChapterFor
                 </Form>
             )}
             {!isCreating && (
-                <div className={cn("text-sm", !initialData?.modules?.length && "text-slate-500 italic")}>
-                    { !initialData?.modules?.length && "Nenhuma aula criada ainda" } 
-                    <ModuleChapterList onEdit={onEdit} onReorder={onReorder} items={initialData?.modules || []}  />
+                <div className={cn("text-sm", !initialData?.chapters?.length && "text-slate-500 italic")}>
+                    { !initialData?.chapters?.length && "Nenhuma aula criada ainda" } 
+                    <ModuleChapterList onEdit={onEdit} onReorder={onReorder} items={initialData?.chapters || []}  />
                 </div>
             )}
             {!isCreating && (

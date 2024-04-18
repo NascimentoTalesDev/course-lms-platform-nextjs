@@ -13,6 +13,7 @@ import { Chapter, MuxData } from "@prisma/client";
 interface ChapterVideoFormProps {
     initialData: Chapter & { muxData?: MuxData | null }
     courseId: string
+    moduleId: string
     chapterId: string
 }
 
@@ -20,14 +21,14 @@ const formSchema = z.object({
     videoUrl: z.string().min(1)
 })
 
-const ChapterVideoForm = ({ initialData, courseId, chapterId } : ChapterVideoFormProps) => {
+const ChapterVideoForm = ({ initialData, courseId, moduleId, chapterId } : ChapterVideoFormProps) => {
     const router = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`${base}/${version}/courses/${courseId}/chapters/${chapterId}`, values) 
+            await axios.patch(`${base}/${version}/courses/${courseId}/modules/${moduleId}/chapters/${chapterId}`, values) 
             toast.success("Video atualizado")
             toggleEdit()
             router.refresh()
@@ -41,7 +42,7 @@ const ChapterVideoForm = ({ initialData, courseId, chapterId } : ChapterVideoFor
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Video do curso
+                Video da aula
                 <Button className="" onClick={toggleEdit} variant={"ghost"}>
                     {isEditing && (
                         <>Cancelar</>
@@ -84,7 +85,7 @@ const ChapterVideoForm = ({ initialData, courseId, chapterId } : ChapterVideoFor
                     </div>
 
                     <div className="text-xs text-muted-foreground mt-4 h-fit py-1">
-                        Faça o upload do video deste modulo aqui
+                        Faça o upload do video desta aula aqui
                     </div>
                 </div>
             )}

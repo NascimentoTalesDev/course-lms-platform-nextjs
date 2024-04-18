@@ -6,12 +6,12 @@ import { cn } from "../../../../lib/utils";
 import { Grip, Pencil } from "lucide-react";
 import { Badge } from "../../../ui/badge";
 
-interface ChapterListProps {
+interface ModuleChapterListProps {
     items: Chapter[],
     onReorder: (updated: { id: string; position: number }[]) => void;
     onEdit: (id: string) => void;
 }
-const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps ) => {
+const ModuleChapterList = ({ onEdit, onReorder, items }: ModuleChapterListProps ) => {
     const [ isMounted, setIsMounted ] = useState(false)
     const [ chapters, setChapters ] = useState(items)
     
@@ -34,7 +34,7 @@ const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps ) => {
         const endIndex = Math.max(result.source.index, result.destination.index)
 
         const updatedChapters = items.slice(startIndex, endIndex + 1)
-
+        
         setChapters(items)
 
         const bulkUpdateData = updatedChapters.map((chapter) => ({
@@ -86,4 +86,4 @@ const ChapterList = ({ onEdit, onReorder, items }: ChapterListProps ) => {
     );
 }
  
-export default ChapterList;
+export default ModuleChapterList;

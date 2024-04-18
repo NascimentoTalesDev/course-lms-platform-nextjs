@@ -8,15 +8,21 @@ interface RequestBody {
 export default async function Attachments(req: NextRequest, res: NextResponse) {
     const { method }: RequestBody = req;
 
-    const { courseId } = (req as any).query;
+    const { courseId, moduleId } = (req as any).query;
     const { title } = (req as any).body;
 
     if (method === "POST") {
-
         const courseOwner = await db.course.findUnique({
             where: {
                 id: courseId
             },
+            include: {
+                modules: {
+                    orderBy: {
+                        position: "asc"
+                    }
+                }
+            }
         })
         
         const lastModule = await db.courseModule.findFirst({
@@ -37,8 +43,7 @@ export default async function Attachments(req: NextRequest, res: NextResponse) {
                 position: newPosition
             }
         })
-
+        
         return res.json(course_module)
     }
-
 }

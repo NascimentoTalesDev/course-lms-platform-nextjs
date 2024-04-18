@@ -49,5 +49,16 @@ export default async function CourseId(req: NextRequest, res: NextResponse) {
         return res.json(course)    
     }
     
+    if(method === "DELETE"){        
+        console.log("DELETE", courseId);
+        
+         const deletedCourse = await db.course.delete({
+             where : {
+                 id: courseId,
+             }
+         })
+ 
+         return res.json(deletedCourse)    
+     }
 
 }

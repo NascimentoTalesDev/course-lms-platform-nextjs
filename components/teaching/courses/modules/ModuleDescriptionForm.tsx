@@ -69,8 +69,8 @@ const ModuleDescriptionForm = ({ initialData, courseId, moduleId }: ModuleDescri
             {!isEditing && (
                 <p className={cn("test-sm mt-2", !initialData?.description && "text-slate-500 italic")}>
                     {!initialData?.description && "Não há descrição do modulo"}
-                    {initialData.description && (
-                        <Preview value={initialData.description} />
+                    {initialData?.description && (
+                        <Preview value={initialData?.description} />
                     )}
                 </p>
             )}
